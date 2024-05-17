@@ -13,7 +13,6 @@ public class DesktopLauncher {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setWindowedMode(1024, 900);
 		config.setForegroundFPS(60);
-		//Inicialización de los elementos gráficos
 		
 		config.setTitle("RPG UMA Studios");
 		new Lwjgl3Application(new RPGUMAStudios(), config);

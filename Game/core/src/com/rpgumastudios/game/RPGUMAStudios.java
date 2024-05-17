@@ -8,6 +8,24 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+/*
+	Casos de uso que implementaremos:
+	1. Moverse
+	2. Atacar
+	3. Atacar con habilidad
+	4. Menú inicial
+	5. Abrir menú principal
+	6. Interactuar con un objeto del mundo
+	7. Interactuar con NPC
+	8. Resolver un puzzle
+	
+	El sketch: luego de que se muestre el menú inicial,aparecemos en una playa y hay un NPC, el cual nos incita explorar una extraña cueva más adelante.
+	Podemos abrir el menú principal a modo de pause cuando queramos.
+	El jugador seguirá un camino hacia la derecha el cual desemboca en una entrada la cueva.
+	El jugador necesitará resolver un puzle en la puerta el cual es un mapa de karnaugh, cuando lo resuelva, podrá pasar a la cueva.
+	Una vez en la cueva, se enfrentará a un jefe que supone un pequeño reto, al lograrlo, suelta un cártel con "Gracias por jugar esta pequeña demo" o algo similar.
+*/
+
 public class RPGUMAStudios extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture runningBackground;
