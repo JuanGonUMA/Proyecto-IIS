@@ -36,6 +36,7 @@ public class RPGUMAStudios extends ApplicationAdapter {
     private ShapeRenderer shapeRenderer;
     private int indiceTexto = 0;
     private Array<String> textosDialogo = new Array<>();
+    private BitmapFont fontGrande;
 
     @Override
     public void create() {
@@ -61,6 +62,10 @@ public class RPGUMAStudios extends ApplicationAdapter {
 
         shapeRenderer = new ShapeRenderer();
 
+        fontGrande = new BitmapFont();  // Inicializa fontGrande
+        fontGrande.getData().setScale(2);  // Ajusta el tamaño de la fuente
+        fontGrande.setColor(Color.WHITE);
+
         estadoActual = Estado.INICIO;
 
         salas = new Array<>();
@@ -71,11 +76,12 @@ public class RPGUMAStudios extends ApplicationAdapter {
         sala1.addEntidad(new Piedra(100, 100));
 
         Array<String> dialogosNPC1 = new Array<>();
-        dialogosNPC1.add("¡Hola, jugador! Bienvenido a nuestro mundo.");
-        dialogosNPC1.add("Espero que disfrutes tu estancia aquí.");
-
+        dialogosNPC1.add("¡Hola, jugador! Bienvenido. El caso de uso de hablar con los NPC te permite presionar la tecla espacio para pasar al siguiente texto.");
+        dialogosNPC1.add("Mientras hables con un NPC, no es posible acceder al menú principal.");
+        dialogosNPC1.add("Y una vez un NPC se quede sin más texto en su diálogo, su cuadro de diálogo se cerrará.");
+        
         sala1.addEntidad(new NPC(700, 700, "npc.png", dialogosNPC1));
-        sala1.addEntidad(new Enemigo(600, 600, "enemigo.png", sala1.getEntidades())); // Pasar entidades
+        sala1.addEntidad(new Enemigo(600, 600, "enemigo.png", sala1.getEntidades()));
 
         Sala sala2 = new Sala();
         sala2.addEntidad(new Piedra(400, 400));
@@ -85,7 +91,7 @@ public class RPGUMAStudios extends ApplicationAdapter {
 
         Puerta puerta2 = new Puerta(200, 200, 50, 50, "puerta.png", sala1);
         sala2.addEntidad(puerta2);
-        sala2.addEntidad(new Enemigo(300, 300, "enemigo.png", sala2.getEntidades())); // Pasar entidades
+        sala2.addEntidad(new Enemigo(300, 300, "enemigo.png", sala2.getEntidades()));
 
         salas.add(sala1);
         salas.add(sala2);
@@ -107,6 +113,7 @@ public class RPGUMAStudios extends ApplicationAdapter {
     }
 
     private void dibujarInicio() {
+        ScreenUtils.clear(0, 0, 0, 1);
         batch.setProjectionMatrix(camara.combined);
         batch.begin();
         batch.draw(pantallaInicio, 0, 0);
@@ -130,7 +137,6 @@ public class RPGUMAStudios extends ApplicationAdapter {
             batch.draw(entidad.getTextura(), entidad.x, entidad.y);
         }
 
-        // Dibujar la salud del jugador
         font.draw(batch, "Salud: " + player.getSalud(), 10, 890);
         batch.end();
 
@@ -140,7 +146,6 @@ public class RPGUMAStudios extends ApplicationAdapter {
 
         player.actualizarPosicion(salaActual.getEntidades(), dialogoActivo);
 
-        // Hacer una copia de la lista de entidades para evitar iteración anidada
         Array<Entidad> entidadesCopia = new Array<>(salaActual.getEntidades());
 
         for (Entidad entidad : entidadesCopia) {
@@ -193,74 +198,47 @@ public class RPGUMAStudios extends ApplicationAdapter {
         batch.setProjectionMatrix(camara.combined);
         batch.begin();
 
-        // Crear una fuente más grande y cambiar el tamaño
-        BitmapFont fontGrande = new BitmapFont();
-        fontGrande.getData().setScale(2);  // Aumenta el tamaño de la fuente
-        fontGrande.setColor(Color.WHITE);
-
-        // Dibujar el texto centrado
         String titulo = "Menú Principal";
         String opcion1 = "1. Continuar";
         String opcion2 = "2. Salir";
         String opcion3 = "3. Volver al Menú Inicial";
 
-        // Centramos el texto
         float centerX = 1024 / 2;
-        float tituloWidth = fontGrande.getRegion().getRegionWidth();
-        float opcion1Width = fontGrande.getRegion().getRegionWidth();
-        float opcion2Width = fontGrande.getRegion().getRegionWidth();
-        float opcion3Width = fontGrande.getRegion().getRegionWidth();
 
-        // Calcular las posiciones para centrar el texto
-        float tituloX = centerX - tituloWidth / 2;
-        float opcion1X = centerX - opcion1Width / 2;
-        float opcion2X = centerX - opcion2Width / 2;
-        float opcion3X = centerX - opcion3Width / 2;
+        // Crear un objeto BitmapFont para el título con tamaño más grande
+        BitmapFont fontTitulo = new BitmapFont();
+        fontTitulo.getData().setScale(3);  // Escalar la fuente del título a un tamaño mayor
+        fontTitulo.setColor(Color.WHITE);
 
-        // Dibujar el texto en la pantalla
-        fontGrande.draw(batch, titulo, tituloX, 600);
-        fontGrande.draw(batch, opcion1, opcion1X, 500);
-        fontGrande.draw(batch, opcion2, opcion2X, 400);
-        fontGrande.draw(batch, opcion3, opcion3X, 300);
+        // Dibujar el título con la fuente más grande
+        fontTitulo.draw(batch, titulo, centerX - fontTitulo.getRegion().getRegionWidth() / 2, 600);
+
+        // Dibujar las opciones con la fuente original
+        fontGrande.draw(batch, opcion1, centerX - fontGrande.getRegion().getRegionWidth() / 2, 500);
+        fontGrande.draw(batch, opcion2, centerX - fontGrande.getRegion().getRegionWidth() / 2, 400);
+        fontGrande.draw(batch, opcion3, centerX - fontGrande.getRegion().getRegionWidth() / 2, 300);
 
         batch.end();
-
-        // Liberar recursos de la fuente grande
-        fontGrande.dispose();
 
         if (Gdx.input.isKeyJustPressed(Keys.NUM_1)) {
             estadoActual = Estado.RUNNING;
         } else if (Gdx.input.isKeyJustPressed(Keys.NUM_2)) {
             Gdx.app.exit();
         } else if (Gdx.input.isKeyJustPressed(Keys.NUM_3)) {
-            reiniciarJuego();
             estadoActual = Estado.INICIO;
         }
-    }
 
-    private void reiniciarJuego() {
-        // Dispose de texturas de las pantallas de inicio y running solo si están cargadas
-        if (pantallaInicio != null) {
-            pantallaInicio.dispose();
-            pantallaInicio = null;
-        }
-        if (runningBackground != null) {
-            runningBackground.dispose();
-            runningBackground = null;
-        }
-
-        inicializarJuego();
+        // Liberar los recursos del objeto BitmapFont creado para el título
+        fontTitulo.dispose();
     }
 
     private void cambiarSala(Sala nuevaSala) {
         salaActual = nuevaSala;
-        // Asegurarnos de que el jugador esté en la nueva sala
         if (!salaActual.getEntidades().contains(player, true)) {
             salaActual.addEntidad(player);
         }
     }
 
-    // Método para calcular la distancia entre dos entidades
     private float calcularDistancia(Entidad entidad1, Entidad entidad2) {
         float centroX1 = entidad1.x + entidad1.width / 2;
         float centroY1 = entidad1.y + entidad1.height / 2;
@@ -293,3 +271,4 @@ public class RPGUMAStudios extends ApplicationAdapter {
         estadoActual = nuevoEstado;
     }
 }
+
