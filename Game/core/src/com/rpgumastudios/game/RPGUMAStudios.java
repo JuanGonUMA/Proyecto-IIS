@@ -140,7 +140,7 @@ public class RPGUMAStudios extends ApplicationAdapter {
             dialogoActivo = false;
         }
 
-        if (player.getSalud() <= 0) {
+        if (player.getSalud() == 0) {
         	reiniciarJuego();
         }
         

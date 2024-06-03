@@ -86,6 +86,9 @@ public class Jugador extends Entidad {
 
     public void reducirSalud(int cantidad) {
         this.salud -= cantidad;
+        if (this.salud < 0) {
+        	this.salud = 0;
+        }
     }
 
     public int getSalud() {
