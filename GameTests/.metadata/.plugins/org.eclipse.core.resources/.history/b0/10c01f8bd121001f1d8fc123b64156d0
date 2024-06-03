@@ -1,0 +1,5 @@
+package com.rpgumastudios.game;
+
+public class NPC extends Entidad {
+
+}

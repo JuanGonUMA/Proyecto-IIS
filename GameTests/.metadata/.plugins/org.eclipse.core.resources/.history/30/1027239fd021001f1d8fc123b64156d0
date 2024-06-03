@@ -1,0 +1,68 @@
+package com.rpgumastudios.game;
+
+public class Jugador extends Entidad {
+    private int vida;
+    private int posX;
+    private int posY;
+    private final int minX = 0;
+    private final int minY = 0;
+    private final int maxX = 1024;
+    private final int maxY = 900;
+
+    public Jugador(int vidaInicial, int posXInicial, int posYInicial) {
+        this.vida = vidaInicial;
+        this.posX = posXInicial;
+        this.posY = posYInicial;
+    }
+
+    public void reducirVida(int cantidad) {
+        vida -= cantidad;
+        if (vida < 0) {
+            vida = 0;
+        }
+    }
+
+    public void moverX(int cantidad) {
+        posX += cantidad;
+        if (posX < minX) {
+            posX = minX;
+        } else if (posX > maxX) {
+            posX = maxX;
+        }
+    }
+
+    public void moverY(int cantidad) {
+        posY += cantidad;
+        if (posY < minY) {
+            posY = minY;
+        } else if (posY > maxY) {
+            posY = maxY;
+        }
+    }
+
+    // Getters y setters
+
+    public int getSalud() {
+        return vida;
+    }
+
+    public void setVida(int vida) {
+        this.vida = vida;
+    }
+
+    public int getPosX() {
+        return posX;
+    }
+
+    public void setPosX(int posX) {
+        this.posX = posX;
+    }
+
+    public int getPosY() {
+        return posY;
+    }
+
+    public void setPosY(int posY) {
+        this.posY = posY;
+    }
+}
