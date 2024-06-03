@@ -44,27 +44,21 @@ public class RPGUMAStudios extends ApplicationAdapter {
     }
 
     private void inicializarJuego() {
-        if (pantallaInicio == null) {
-            pantallaInicio = new Texture("backgroundTest.jpg");
-        }
-        if (runningBackground == null) {
-            runningBackground = new Texture("runningBackground.jpg");
-        }
+        batch = new SpriteBatch();
+        font = new BitmapFont();
+        font.setColor(Color.WHITE);
+        shapeRenderer = new ShapeRenderer();
+        fontGrande = new BitmapFont();
+        fontGrande.getData().setScale(2);
+        fontGrande.setColor(Color.WHITE);
+        pantallaInicio = new Texture("menuinicial.jpg");
+        runningBackground = new Texture("runningBackground.jpg");
+        
 
         player = new Jugador();
 
         camara = new OrthographicCamera();
         camara.setToOrtho(false, 1024, 900);
-        batch = new SpriteBatch();
-
-        font = new BitmapFont();
-        font.setColor(Color.WHITE);
-
-        shapeRenderer = new ShapeRenderer();
-
-        fontGrande = new BitmapFont();  // Inicializa fontGrande
-        fontGrande.getData().setScale(2);  // Ajusta el tamaño de la fuente
-        fontGrande.setColor(Color.WHITE);
 
         estadoActual = Estado.INICIO;
 
@@ -72,26 +66,28 @@ public class RPGUMAStudios extends ApplicationAdapter {
 
         Sala sala1 = new Sala();
         sala1.addEntidad(player);
-        sala1.addEntidad(new Piedra(300, 300));
-        sala1.addEntidad(new Piedra(100, 100));
+        sala1.addEntidad(new Piedra(500, 800));
+        sala1.addEntidad(new Piedra(550, 800));
+        sala1.addEntidad(new Piedra(600, 800));
+        sala1.addEntidad(new Piedra(650, 800));
+        sala1.addEntidad(new Piedra(700, 800));
 
         Array<String> dialogosNPC1 = new Array<>();
         dialogosNPC1.add("¡Hola, jugador! Bienvenido. El caso de uso de hablar con los NPC te permite presionar la tecla espacio para pasar al siguiente texto.");
         dialogosNPC1.add("Mientras hables con un NPC, no es posible acceder al menú principal.");
         dialogosNPC1.add("Y una vez un NPC se quede sin más texto en su diálogo, su cuadro de diálogo se cerrará.");
         
-        sala1.addEntidad(new NPC(700, 700, "npc.png", dialogosNPC1));
-        sala1.addEntidad(new Enemigo(600, 600, "enemigo.png", sala1.getEntidades()));
+        sala1.addEntidad(new NPC(700, 600, "npc.png", dialogosNPC1));
 
         Sala sala2 = new Sala();
         sala2.addEntidad(new Piedra(400, 400));
 
-        Puerta puerta1 = new Puerta(500, 500, 50, 50, "puerta.png", sala2);
+        Puerta puerta1 = new Puerta(500, 300, 50, 50, "puerta.png", sala2);
         sala1.addEntidad(puerta1);
 
-        Puerta puerta2 = new Puerta(200, 200, 50, 50, "puerta.png", sala1);
+        Puerta puerta2 = new Puerta(500, 300, 50, 50, "puerta.png", sala1);
         sala2.addEntidad(puerta2);
-        sala2.addEntidad(new Enemigo(300, 300, "enemigo.png", sala2.getEntidades()));
+        sala2.addEntidad(new Enemigo(800, 800, "enemigo.png", sala2.getEntidades()));
 
         salas.add(sala1);
         salas.add(sala2);
@@ -119,7 +115,7 @@ public class RPGUMAStudios extends ApplicationAdapter {
         batch.draw(pantallaInicio, 0, 0);
         batch.end();
 
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.isKeyJustPressed(Keys.ANY_KEY)) {
             estadoActual = Estado.RUNNING;
         }
     }
@@ -144,6 +140,10 @@ public class RPGUMAStudios extends ApplicationAdapter {
             dialogoActivo = false;
         }
 
+        if (player.getSalud() <= 0) {
+        	reiniciarJuego();
+        }
+        
         player.actualizarPosicion(salaActual.getEntidades(), dialogoActivo);
 
         Array<Entidad> entidadesCopia = new Array<>(salaActual.getEntidades());
@@ -201,7 +201,7 @@ public class RPGUMAStudios extends ApplicationAdapter {
         String titulo = "Menú Principal";
         String opcion1 = "1. Continuar";
         String opcion2 = "2. Salir";
-        String opcion3 = "3. Volver al Menú Inicial";
+        String opcion3 = "3. Reiniciar Juego";
 
         float centerX = 1024 / 2;
 
@@ -225,7 +225,7 @@ public class RPGUMAStudios extends ApplicationAdapter {
         } else if (Gdx.input.isKeyJustPressed(Keys.NUM_2)) {
             Gdx.app.exit();
         } else if (Gdx.input.isKeyJustPressed(Keys.NUM_3)) {
-            estadoActual = Estado.INICIO;
+            reiniciarJuego();
         }
 
         // Liberar los recursos del objeto BitmapFont creado para el título
@@ -270,5 +270,15 @@ public class RPGUMAStudios extends ApplicationAdapter {
     public static void cambiarEstado(Estado nuevoEstado) {
         estadoActual = nuevoEstado;
     }
-}
 
+    public void reiniciarJuego() {
+        // Dispose of existing game objects and textures
+        dispose();
+        
+        // Reinitialize game state
+        inicializarJuego();
+        
+        // Set game state to INICIO to display the initial screen
+        estadoActual = Estado.INICIO;
+    }
+}

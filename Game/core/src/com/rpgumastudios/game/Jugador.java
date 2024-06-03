@@ -10,7 +10,7 @@ public class Jugador extends Entidad {
     private final int saludMaxima = 100;
 
     public Jugador() {
-        super(500, 500, 50, 50, "test.png");
+        super(500, 500, 50, 50, "jugador.png");
         this.salud = saludMaxima;
     }
 
@@ -86,18 +86,6 @@ public class Jugador extends Entidad {
 
     public void reducirSalud(int cantidad) {
         this.salud -= cantidad;
-        if (this.salud <= 0) {
-            reiniciarJuego();
-        }
-    }
-
-    private void reiniciarJuego() {
-        // Reiniciar posición y salud
-        this.x = 500;
-        this.y = 500;
-        this.salud = saludMaxima;
-        // Cambiar a la pantalla de inicio
-        RPGUMAStudios.cambiarEstado(Estado.INICIO);
     }
 
     public int getSalud() {

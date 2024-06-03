@@ -65,7 +65,7 @@ public class Enemigo extends Entidad implements Steerable<Vector2> {
 	        if (calcularDistancia(jugador) <= 75 && timeSinceLastAttack >= TIME_BETWEEN_ATTACKS) {
 	            atacar(jugador);
 	            timeSinceLastAttack = 0;
-	            tiempoQuietoDespuesAtaque = 3f; // El enemigo se quedará quieto por 3 segundos después del ataque
+	            tiempoQuietoDespuesAtaque = 1f; // El enemigo se quedará quieto por 1 segundo después del ataque
 	        } else {
 	            perseguirJugador(jugador, delta);
 	        }
@@ -76,7 +76,7 @@ public class Enemigo extends Entidad implements Steerable<Vector2> {
     }
 
     private void atacar(Jugador jugador) {
-        jugador.reducirSalud(10);
+        jugador.reducirSalud(35);
     }
 
     private void perseguirJugador(Jugador jugador, float delta) {
